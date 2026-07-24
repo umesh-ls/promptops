@@ -52,7 +52,7 @@ textarea:focus,input:focus{outline:2px solid #ff5c7a}
   <!-- top bar -->
   <div style="display:flex;align-items:center;gap:14px;padding:16px 28px;border-bottom:1px solid #23263a;max-width:1140px;margin:0 auto">
     <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:19px;color:#fff;letter-spacing:.5px">PROMPT<span style="color:#ff5c7a">OPS</span></div>
-    <div style="font-size:12px;font-weight:800;color:#9aa3c2;background:#181c29;border-radius:6px;padding:4px 10px">SEASON 1 · {{daysLeft}} DAYS LEFT</div>
+    <div style="font-size:12px;font-weight:800;color:#9aa3c2;background:#181c29;border-radius:6px;padding:4px 10px">SEASON 2 · {{daysLeft}} DAYS LEFT</div>
     <div style="flex:1"></div>
     <div style="font-size:13px;font-weight:800;color:#ffb930">⚡ {{xp}} XP</div>
     <div style="font-size:13px;font-weight:800;color:#ff7a45">🔥 {{streak}}</div>
@@ -140,7 +140,7 @@ textarea:focus,input:focus{outline:2px solid #ff5c7a}
 
       <div style="background:#181c29;border:1px solid #23263a;border-radius:14px;padding:14px 16px">
         <div style="font-size:11.5px;font-weight:800;color:#9aa3c2;letter-spacing:1px">FIELD MANUAL</div>
-        <div style="font-size:12.5px;font-weight:600;color:#b6bcd4;margin-top:8px;line-height:1.55">One deploy a day keeps the streak alive. Replay cleared missions to improve your stars — best score counts. Bosses are duels: {{dadName}} enters his answer in the Parent view, Claude judges blind.</div>
+        <div style="font-size:12.5px;font-weight:600;color:#b6bcd4;margin-top:8px;line-height:1.55">Season 2 runs on a weekly streak — 2-3 missions any days you get laptop time keeps 🔥 alive. Replay cleared missions to improve your stars — best score counts. Bosses are duels: {{dadName}} enters his answer in the Parent view, Claude judges blind.</div>
       </div>
     </div>
   </div>
@@ -448,7 +448,7 @@ textarea:focus,input:focus{outline:2px solid #ff5c7a}
   </div>
 </sc-if>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;player1Name&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Rajveer&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Family&quot;}, &quot;player2Name&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Veer&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Family&quot;}, &quot;dadName&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Dad&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Family&quot;}, &quot;seasonDays&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 15, &quot;min&quot;: 5, &quot;max&quot;: 60, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Season&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;player1Name&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Rajveer&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Family&quot;}, &quot;player2Name&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Veer&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Family&quot;}, &quot;dadName&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Dad&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Family&quot;}, &quot;seasonDays&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 90, &quot;min&quot;: 5, &quot;max&quot;: 180, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Season&quot;}}">
 class Component extends DCLogic {
   state = {
     view: 'hud', missionId: null, dataReady: false, player: null,
@@ -483,6 +483,7 @@ class Component extends DCLogic {
     }
     for (const k of ['p1', 'p2', 'p3']) if (!db.players[k]) db.players[k] = this.freshSave();
     if (!db.shared.duelAnswers) db.shared.duelAnswers = { m7: db.shared.dadDuelAnswer || '' };
+    if ((db.shared.season || 1) < 2) { db.shared.season = 2; db.shared.seasonStart = Date.now(); db.shared.ts = Date.now(); }
     this.db = db; this.recompute(); this.saveLocal();
   }
   get sh() { return (this.db && this.db.shared) || {}; }
@@ -574,12 +575,12 @@ class Component extends DCLogic {
 
   today() { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
   bumpStreak() {
-    const t = this.today();
-    if (this.sv.lastDay === t) return;
-    const y = new Date(Date.now() - 864e5);
-    const ys = y.getFullYear() + '-' + (y.getMonth() + 1) + '-' + y.getDate();
-    this.sv.streak = this.sv.lastDay === ys ? (this.sv.streak || 0) + 1 : 1;
-    this.sv.lastDay = t;
+    // Season 2: weekly streak — any mission in a week keeps it alive
+    const wk = 'w' + Math.floor(Date.now() / 6048e5);
+    if (this.sv.lastDay === wk) return;
+    const prev = 'w' + (Math.floor(Date.now() / 6048e5) - 1);
+    this.sv.streak = this.sv.lastDay === prev ? (this.sv.streak || 0) + 1 : 1;
+    this.sv.lastDay = wk;
   }
 
   allOps() { return this.data ? this.data.OPERATIONS : []; }
@@ -813,7 +814,7 @@ class Component extends DCLogic {
     const p1Name = this.props.player1Name ?? 'Rajveer';
     const p2Name = this.props.player2Name ?? 'Veer';
     const dadName = this.props.dadName ?? 'Dad';
-    const seasonDays = this.props.seasonDays ?? 15;
+    const seasonDays = this.props.seasonDays ?? 90;
     const R0 = this.data.RANKS;
     if (!S.player || !this.sv) {
       const mkCard = (key, name, bg) => {
