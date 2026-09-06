@@ -485,4 +485,72 @@ export const OPERATIONS = [
       },
     ],
   },
+  {
+    id: 'op11', num: 'OPERATION 11 · S2', name: 'PUBLIC RECORD', tagline: 'Put your work on the public internet — under your own name', color: '#4ad6ff',
+    missions: [
+      {
+        id: 'm41', type: 'intel', title: 'Why Public Changes Everything', minutes: 10,
+        sub: 'From "I made a thing" to "here is the link"',
+        cards: [
+          { title: 'The credibility jump', body: "A project on your laptop is a story. A project on a live URL, in a public repo, with a README anyone can read, is EVIDENCE. Same work, completely different weight — to classmates, teachers, and to anyone who asks in five years what you were doing at 14." },
+          { title: 'Public work raises your standard', body: "The moment strangers can open it, you stop accepting 'works on my machine'. Broken links, confusing buttons, missing instructions — you'll find and fix things you'd otherwise shrug at. That pressure is the point, and it's how professionals work every day." },
+          { title: 'The three artifacts', body: "This operation produces exactly three things: (1) a LIVE URL anyone can open, (2) a public REPO with a README that explains it in 60 seconds, (3) a BUILD LOG in your own words. Together they're a portfolio — the thing that outlives the project itself." },
+          { title: 'Write for the stranger', body: "Everything public gets written for someone who knows nothing: not your teacher, not Dad, not Claude. A stranger with 60 seconds. What is it? Who is it for? How do I try it? What did YOU build vs what did AI help with? Answer those and you're ahead of most adults online." },
+          { title: 'Honesty is your edge', body: "Say plainly that you built it with AI help, and exactly how — that's the modern skill, not a confession. The people worth impressing are impressed by someone who can DIRECT an AI, ship the result, and describe the process truthfully. Hiding it is both weaker and easy to spot." },
+        ],
+      },
+      {
+        id: 'm42', type: 'live', liveKind: 'chat', title: 'Go Live', minutes: 35,
+        sub: 'Get your project on a real URL',
+        objectives: [
+          'Have Claude walk you through publishing your Shipyard project as a public GitHub repository (account, new repo, uploading your files)',
+          'Turn on GitHub Pages and get a working live URL — open it in your browser and confirm it actually runs there, not just on your laptop',
+          'Fix whatever broke when it went live (missing file, wrong filename, broken link) and re-check the URL until a stranger could use it',
+        ],
+        chatSystem: "You are Claude, walking Rajveer, a 10th grader at boarding school, through publishing his project to GitHub Pages for the first time. Give exact click-by-click steps for the current GitHub web interface (he uploads files through the browser, no command line). Common traps to catch: the entry file must be named index.html, file names are case-sensitive, Pages takes a minute to build, and relative paths must match. When he reports an error or a blank page, debug patiently and specifically. Keep steps short and numbered.",
+        debriefPrompt: "You are mission control for a learning game. A 10th grader published his project to the public web. Objectives: (1) created a public repository and uploaded his project files, (2) enabled GitHub Pages and confirmed a working live URL in his browser, (3) fixed at least one thing that broke on going live (or verified it works for a stranger). Based on the transcript, return STRICT JSON only: {\"done\":[true/false,true/false,true/false],\"feedback\":\"2-3 sentences, addressed to Rajveer, celebrating shipping publicly and naming one thing to keep an eye on\"}",
+      },
+      {
+        id: 'm43', type: 'live', liveKind: 'chat', title: 'The README', minutes: 25,
+        sub: 'The 60-second explanation of your work',
+        objectives: [
+          'Draft your README yourself first — what it is, who it is for, how to try it (the live link), how it works, and how you used AI while building it',
+          'Have Claude review it AS A STRANGER: what is unclear, what is missing, what a visitor would ask — then improve it with his feedback',
+          'Publish it: add the README to your repo and check it renders properly on the repo page',
+        ],
+        chatSystem: "You are Claude, helping Rajveer, a 10th grader, write the README for his first public project. Insist he drafts first — do not write it for him. Then review it strictly from the perspective of a stranger arriving with 60 seconds: flag jargon, missing setup steps, absent live link, vague claims. Suggest structure (one-line summary, who it's for, live demo link, features, how it was built, honest note on AI assistance) but keep HIS words. Teach basic markdown as needed.",
+        debriefPrompt: "You are mission control for a learning game. A 10th grader wrote a README for his public project. Objectives: (1) drafted it himself covering what/who/how-to-try/how-built/AI-use, (2) got a stranger's-eye review from Claude and revised it, (3) published it to the repo and confirmed it renders. Based on the transcript, return STRICT JSON only: {\"done\":[true/false,true/false,true/false],\"feedback\":\"2-3 sentences, addressed to Rajveer, on the clarity of his writing\"}",
+      },
+      {
+        id: 'm44', type: 'live', liveKind: 'chat', title: 'Build Log', minutes: 30,
+        sub: 'Write the story of how it was made',
+        objectives: [
+          'Write 3 short entries (150-250 words each) in your own voice: what you set out to build, the hardest problem and how you cracked it, and what you would do differently',
+          'Have Claude edit for clarity only — NOT rewrite in its voice; keep every sentence recognisably yours and reject anything that does not sound like you',
+          'Publish the log (a LOG.md in your repo, or a page on your site) and link it from your README',
+        ],
+        chatSystem: "You are Claude, acting as a light-touch editor for Rajveer, a 10th grader writing the build log of his first public project. Critical rule: preserve HIS voice. Do not rewrite passages into polished adult prose — point out unclear sentences, missing specifics, and boring openings, and let him fix them. If he asks you to write it for him, refuse warmly and ask him a question that unlocks the paragraph instead. Praise concrete detail over grand claims.",
+        debriefPrompt: "You are mission control for a learning game. A 10th grader wrote a public build log. Objectives: (1) wrote 3 substantive entries himself (intent, hardest problem, what he'd do differently), (2) used Claude as an editor while keeping his own voice, (3) published the log and linked it from the README. Based on the transcript, return STRICT JSON only: {\"done\":[true/false,true/false,true/false],\"feedback\":\"2-3 sentences, addressed to Rajveer, quoting or naming his strongest piece of writing\"}",
+      },
+      {
+        id: 'm45', type: 'live', liveKind: 'chat', title: 'Cold Handoff', minutes: 25,
+        sub: 'Give the link to someone who knows nothing',
+        objectives: [
+          'Before the session: send your live link to someone who has never seen the project (a classmate, a teacher, a relative) with NO explanation beyond the link — then note everything they asked or got stuck on',
+          'Report the results to Claude and diagnose it: which confusions are a product problem, which are a README problem, which are neither',
+          'Fix the top two issues, publish the updates, and confirm the live URL now handles a cold visitor',
+        ],
+        chatSystem: "You are Claude, helping Rajveer, a 10th grader, interpret a cold-handoff test of his public project. Teach the distinction between product problems (the thing itself is confusing), documentation problems (the README failed to prepare them) and non-problems (personal taste, out-of-scope requests). Prioritise ruthlessly: only the top two fixes matter now. Help him implement and re-publish, and note that testing on a stranger is a habit most adults skip.",
+        debriefPrompt: "You are mission control for a learning game. A 10th grader ran a cold-handoff test of his public project. Objectives: (1) gave the bare live link to someone new and collected their real confusions, (2) diagnosed each as product / documentation / non-problem, (3) fixed the top two and re-published. Based on the transcript, return STRICT JSON only: {\"done\":[true/false,true/false,true/false],\"feedback\":\"2-3 sentences, addressed to Rajveer\"}",
+      },
+      {
+        id: 'm46', type: 'boss', title: 'GRAND FINAL: Public Defense', minutes: 20,
+        sub: 'Defend your public work. Highest honour in the game.',
+        challenge: "THE GRAND FINAL: Write the defense of your public work (10-12 sentences), as if to someone smart and skeptical who asks 'did you really do this?'. Cover: the live link and what it does, the decisions YOU made, exactly how you used AI and where you overruled it, the hardest thing you personally solved, what a cold visitor taught you, and what you're building next. Your rival defends their own work. Claude judges: real evidence, honest attribution, and thinking that could only come from having actually done it.",
+        duelHint: 'Write a 10-12 sentence defense of a real public project or piece of work: the link, your decisions, exactly how AI was used and where you overruled it, the hardest thing you solved yourself, and what is next.',
+        coachbotAnswer: 'My project is online and it works well. I used AI to build it and everyone liked it. It was not very hard and I am proud of it.',
+        judgePrompt: "You are the judge of the grand final in an AI-literacy game: a Public Defense. Two contestants defended real work they published. Judge the DEFENSES: verifiable specifics (what it does, where it lives, real decisions), honest and precise attribution of AI assistance including where they overruled the AI, a genuine hard problem solved personally, evidence of learning from an outside user, and a credible next step. Reward honesty and concrete detail; penalise vague pride, unverifiable claims, and hiding AI use. Return STRICT JSON only: {\"winner\": \"A\" or \"B\", \"scoreA\": 0-100, \"scoreB\": 0-100, \"reasoning\": \"3-4 sentences comparing the defenses, with the gravity of a grand final. Contestant A is Rajveer, contestant B is his dad.\"}",
+      },
+    ],
+  },
 ];
